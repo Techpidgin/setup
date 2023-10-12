@@ -1,0 +1,183 @@
+Hardhat is a flexible and diverse Javascript-based framework for Ethereum blockchain developers. 
+Web3 Developer Tools. Development Frameworks. Ethereum.
+
+
+
+create a folder 
+drag and drop it in vscode
+open terminal
+
+npm init
+
+if npm is not install type the following code to install npm package manager
+
+npm install -g npm
+=========================================================
+go to package.json to add these dependencies
+
+ "dependencies": {
+    "@influxdata/influxdb-client": "1.33.2",
+    "@nomiclabs/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.2.2",
+    "@dotenev": "^16.0.3",
+    "ethers":"^6.7.1",
+    "hardhat": "^2.18.0"
+  }
+===============================================================
+the beginning of the code file will look like this after adding it 
+
+{
+  "name": "hardhat",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "hardhat",
+      "version": "1.0.0",
+      "license": "ISC",
+      "dependencies": {
+        "@influxdata/influxdb-client": "1.33.2",
+        "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+        "@nomiclabs/hardhat-ethers": "^2.2.2",
+        "dotenv": "^16.0.3",
+        "ethers": "^5.7.1",
+        "hardhat": "^2.13.0"
+      }
+
+
+===========================================================
+
+
+
+
+In terminal type in this code>>>>>>>:        npm install
+wait fot downloads...
+====================================================================
+Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env. 
+The dotenv package is a great way to keep passwords, API keys, and other sensitive data out of your code. 
+It allows you to create environment variables in a . env file instead of putting them in your code.
+
+possible error 
+Fix the upstream dependency conflict, or retry
+
+solution :if you have nodemodule in root folder delete it,root is usually user/computer name  of user1
+========================================
+ALCHEMY REFERRAL LINK ro get alchemy API KEYS
+
+https://alchemy.com/?r=jI3NDgzMjkxMjM0N
+
+
+CREATE NEW APP
+
+
+GET API KEY HTTPS URL ON THE TOP RIGTH
+
+https://eth-goerli.g.alchemy.com/v2/YOUR_API_KEY
+
+========================================================
+
+Create .env file AND ADD YOUR WALLET PRIVATE KEY 
+To get private key go to 3 dots in right top of metamask,click it and go to account 
+details make sure this is not a wallet you use for mainnet interactions
+
+ALCHEMY_GOERLI_URL="https://eth-goerli.g.alchemy.com/v2/YOUR_API_KEY"
+
+GOERLI_PRIVATE_KEY="65t7r38r7rdddwdwwrEXAMPLE334hthjyjkkukuefffwwdqqqq"
+
+
+=========================================
+In terminal type this code  :npx hardhat
+
+you  may get the following error:
+DEPRECATION WARNING
+
+ Initializing a project with npx hardhat is deprecated and will be removed in the future.
+ Please use npx hardhat init instead
+=================================================
+
+=====================================================
+
+Direction:in contracts change name of lock.sol to HelloWorld.sol and clear code
+lets write this code in contract/HelloWorld.sol instead
+
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+contract HelloWord{
+
+
+   
+   string public message;
+
+   
+   constructor(string memory initMessage) {
+
+     
+      message = initMessage;
+   }
+
+   
+   function update(string memory newMessage) public {
+      message = newMessage;
+   }
+
+   function getMessage() external view returns(string memory){ 
+         return message;
+   }
+}
+===================================================================
+Direction: In scripts/deploy.js file ADD THIS CODE to help us deploy and add constructor arguments
+
+const hre = require("hardhat");
+
+async function main() {
+  const HelloWorld = await hre.ethers.getContractFactory("HelloWorld");
+  const HelloWorld_ = await HelloWorld.deploy("This is first message");
+
+  await HelloWorld_.deployed();
+
+  console.log(
+    `Contract Address: ${HelloWorld_.address}`
+  );
+}
+
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+
+=============================================================================
+IN hardhat.config.js ADD THE FOLLOWING CODE
+
+
+require('dotenv').config();
+require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-toolbox");
+
+
+
+module.exports = {
+   solidity: "0.8.17",
+   networks: {
+     goerli: {
+       url: `${process.env.ALCHEMY_GOERLI_URL}`,
+       accounts: [`0x${process.env.GOERLI_PRIVATE_KEY}`],
+     }
+   }
+ };
+================================================================================
+In Terminal 
+npx hardhat compile 
+npx npx hardhat run scripts/deploy.js --network goerli
+
+=========================================================
+THIS SHOULD DEPLOY TO GOERLI AND EMIT A CONTRACT ADDRESS
+
+
+
+LEARN MORE HERE 
+https://ethereum.org/en/developers/tutorials/hello-world-smart-contract/
